@@ -8,7 +8,8 @@
   <link rel="icon" type="image/svg+xml" href="/images/VitalNet-Logo.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <title>Configuración - VitalNet</title>
   <style>
     :root {
@@ -21,7 +22,7 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: var(--bg-color);
+      background-color: #e8eaed;
       margin: 0;
       min-height: 100vh;
       overflow-x: hidden;
@@ -40,24 +41,50 @@
       user-select: none;
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-around;
-      align-content: space-around;
-      padding: 20px;
-      opacity: 0.28;
+      justify-content: flex-start;
+      gap: 5px 15px;
+      align-content: flex-start;
+      padding: 10px;
+      opacity: 0.75;
     }
 
     .bg-word {
-      font-size: 7.5rem;
+      font-size: 6rem;
       font-weight: 800;
-      color: rgba(0, 0, 0, 0.12);
-      background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+      /* Apple Liquid Glass Gradient - Whiter Version */
+      background: linear-gradient(165deg,
+          rgba(255, 255, 255, 1.0) 0%,
+          rgba(255, 255, 255, 0.4) 35%,
+          rgba(255, 255, 255, 0.6) 50%,
+          rgba(255, 255, 255, 0.4) 65%,
+          rgba(255, 255, 255, 0.9) 100%);
       -webkit-background-clip: text;
       background-clip: text;
-      text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.9), -1px -1px 1px rgba(0, 0, 0, 0.08);
+      /* Specular highlights for depth */
+      text-shadow:
+        -1px -1px 0px rgba(255, 255, 255, 1.0),
+        1px 1px 1px rgba(0, 0, 0, 0.1),
+        0px 0px 25px rgba(255, 255, 255, 0.5);
+      -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.2);
+
       white-space: nowrap;
       letter-spacing: -3px;
-      line-height: 1;
-      text-transform: capitalize;
+      line-height: 0.85;
+      text-transform: none;
+    }
+
+    .bg-word:nth-child(3n) {
+      padding-left: 80px;
+    }
+
+    .bg-word:nth-child(3n+1) {
+      padding-left: 0;
+    }
+
+    .bg-word:nth-child(3n+2) {
+      padding-left: 40px;
     }
 
     main {
@@ -334,10 +361,202 @@
     <span class="bg-word">care</span>
     <span class="bg-word">quality</span>
     <span class="bg-word">reliability</span>
+    <span class="bg-word">empowerment</span>
     <span class="bg-word">trust</span>
+    <span class="bg-word">growth</span>
     <span class="bg-word">progress</span>
     <span class="bg-word">safety</span>
     <span class="bg-word">well-being</span>
+    <span class="bg-word">support</span>
+    <span class="bg-word">service</span>
+    <span class="bg-word">energy</span>
+    <span class="bg-word">resources</span>
+    <span class="bg-word">intelligence</span>
+    <span class="bg-word">connectivity</span>
+    <span class="bg-word">digitalization</span>
+    <span class="bg-word">efficiency</span>
+    <span class="bg-word">performance</span>
+    <span class="bg-word">experience</span>
+    <span class="bg-word">interaction</span>
+    <span class="bg-word">harmony</span>
+    <span class="bg-word">vision</span>
+    <span class="bg-word">impact</span>
+    <span class="bg-word">global</span>
+    <span class="bg-word">rescue</span>
+    <span class="bg-word">vitality</span>
+    <span class="bg-word">balance</span>
+    <span class="bg-word">hope</span>
+    <span class="bg-word">strength</span>
+    <span class="bg-word">wisdom</span>
+    <span class="bg-word">unity</span>
+    <span class="bg-word">digital</span>
+    <span class="bg-word">smart</span>
+    <span class="bg-word">network</span>
+    <span class="bg-word">ocean</span>
+    <span class="bg-word">clean</span>
+    <span class="bg-word">planet</span>
+    <span class="bg-word">earth</span>
+    <span class="bg-word">agility</span>
+    <span class="bg-word">design</span>
+    <span class="bg-word">spirit</span>
+    <span class="bg-word">kindness</span>
+    <span class="bg-word">justice</span>
+    <span class="bg-word">freedom</span>
+    <span class="bg-word">peace</span>
+    <span class="bg-word">solidarity</span>
+    <span class="bg-word">commitment</span>
+    <span class="bg-word">advancement</span>
+    <!-- Word set 2 -->
+    <span class="bg-word">security</span>
+    <span class="bg-word">health</span>
+    <span class="bg-word">human life</span>
+    <span class="bg-word">equality</span>
+    <span class="bg-word">opportunity</span>
+    <span class="bg-word">goodness</span>
+    <span class="bg-word">water</span>
+    <span class="bg-word">environment</span>
+    <span class="bg-word">sustainability</span>
+    <span class="bg-word">wind</span>
+    <span class="bg-word">protection</span>
+    <span class="bg-word">monitoring</span>
+    <span class="bg-word">vital</span>
+    <span class="bg-word">nature</span>
+    <span class="bg-word">innovation</span>
+    <span class="bg-word">future</span>
+    <span class="bg-word">care</span>
+    <span class="bg-word">quality</span>
+    <span class="bg-word">reliability</span>
+    <span class="bg-word">empowerment</span>
+    <span class="bg-word">trust</span>
+    <span class="bg-word">growth</span>
+    <span class="bg-word">progress</span>
+    <span class="bg-word">safety</span>
+    <span class="bg-word">well-being</span>
+    <span class="bg-word">support</span>
+    <span class="bg-word">service</span>
+    <span class="bg-word">energy</span>
+    <span class="bg-word">resources</span>
+    <span class="bg-word">intelligence</span>
+    <span class="bg-word">connectivity</span>
+    <span class="bg-word">digitalization</span>
+    <span class="bg-word">efficiency</span>
+    <span class="bg-word">performance</span>
+    <span class="bg-word">experience</span>
+    <span class="bg-word">interaction</span>
+    <span class="bg-word">harmony</span>
+    <span class="bg-word">vision</span>
+    <span class="bg-word">impact</span>
+    <span class="bg-word">global</span>
+    <span class="bg-word">rescue</span>
+    <span class="bg-word">vitality</span>
+    <span class="bg-word">balance</span>
+    <span class="bg-word">hope</span>
+    <span class="bg-word">strength</span>
+    <span class="bg-word">wisdom</span>
+    <span class="bg-word">unity</span>
+    <span class="bg-word">digital</span>
+    <span class="bg-word">smart</span>
+    <span class="bg-word">network</span>
+    <span class="bg-word">ocean</span>
+    <span class="bg-word">clean</span>
+    <span class="bg-word">planet</span>
+    <span class="bg-word">earth</span>
+    <span class="bg-word">agility</span>
+    <span class="bg-word">design</span>
+    <span class="bg-word">spirit</span>
+    <span class="bg-word">kindness</span>
+    <span class="bg-word">justice</span>
+    <span class="bg-word">freedom</span>
+    <span class="bg-word">peace</span>
+    <span class="bg-word">solidarity</span>
+    <span class="bg-word">commitment</span>
+    <span class="bg-word">advancement</span>
+    <!-- Word set 3 -->
+    <span class="bg-word">security</span>
+    <span class="bg-word">health</span>
+    <span class="bg-word">human life</span>
+    <span class="bg-word">equality</span>
+    <span class="bg-word">opportunity</span>
+    <span class="bg-word">goodness</span>
+    <span class="bg-word">water</span>
+    <span class="bg-word">environment</span>
+    <span class="bg-word">sustainability</span>
+    <span class="bg-word">wind</span>
+    <span class="bg-word">protection</span>
+    <span class="bg-word">monitoring</span>
+    <span class="bg-word">vital</span>
+    <span class="bg-word">nature</span>
+    <span class="bg-word">innovation</span>
+    <span class="bg-word">future</span>
+    <span class="bg-word">care</span>
+    <span class="bg-word">quality</span>
+    <span class="bg-word">reliability</span>
+    <span class="bg-word">empowerment</span>
+    <span class="bg-word">trust</span>
+    <span class="bg-word">growth</span>
+    <span class="bg-word">progress</span>
+    <span class="bg-word">safety</span>
+    <span class="bg-word">well-being</span>
+    <span class="bg-word">support</span>
+    <span class="bg-word">service</span>
+    <span class="bg-word">energy</span>
+    <span class="bg-word">resources</span>
+    <span class="bg-word">intelligence</span>
+    <span class="bg-word">connectivity</span>
+    <span class="bg-word">digitalization</span>
+    <span class="bg-word">efficiency</span>
+    <span class="bg-word">performance</span>
+    <span class="bg-word">experience</span>
+    <span class="bg-word">interaction</span>
+    <span class="bg-word">harmony</span>
+    <span class="bg-word">vision</span>
+    <span class="bg-word">impact</span>
+    <span class="bg-word">global</span>
+    <span class="bg-word">rescue</span>
+    <span class="bg-word">vitality</span>
+    <span class="bg-word">balance</span>
+    <span class="bg-word">hope</span>
+    <span class="bg-word">strength</span>
+    <span class="bg-word">wisdom</span>
+    <span class="bg-word">unity</span>
+    <span class="bg-word">digital</span>
+    <span class="bg-word">smart</span>
+    <span class="bg-word">network</span>
+    <span class="bg-word">ocean</span>
+    <span class="bg-word">clean</span>
+    <span class="bg-word">planet</span>
+    <span class="bg-word">earth</span>
+    <span class="bg-word">agility</span>
+    <span class="bg-word">design</span>
+    <span class="bg-word">spirit</span>
+    <span class="bg-word">kindness</span>
+    <span class="bg-word">justice</span>
+    <span class="bg-word">freedom</span>
+    <span class="bg-word">peace</span>
+    <span class="bg-word">solidarity</span>
+    <span class="bg-word">commitment</span>
+    <span class="bg-word">advancement</span>
+    <!-- Set 4 for extreme density -->
+    <span class="bg-word">efficiency</span>
+    <span class="bg-word">clarity</span>
+    <span class="bg-word">purity</span>
+    <span class="bg-word">safety</span>
+    <span class="bg-word">reliability</span>
+    <span class="bg-word">ocean</span>
+    <span class="bg-word">wind</span>
+    <span class="bg-word">sky</span>
+    <span class="bg-word">earth</span>
+    <span class="bg-word">vitality</span>
+    <span class="bg-word">life</span>
+    <span class="bg-word">protection</span>
+    <span class="bg-word">care</span>
+    <span class="bg-word">health</span>
+    <span class="bg-word">security</span>
+    <span class="bg-word">innovation</span>
+    <span class="bg-word">nature</span>
+    <span class="bg-word">harmony</span>
+    <span class="bg-word">service</span>
+    <span class="bg-word">support</span>
   </div>
 
   <main>
