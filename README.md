@@ -1,7 +1,21 @@
+<<<<<<< HEAD
 # VitalNet-Reciever
 
+=======
+# VitalNet
+VitalNet is a projet thought and made for a group of students, Nick Flores and Alessandro Zanti Alcalá where the founders. 
+The idea of the project, was to help people in worse conditions of us, to help them not to drink or breathe water and air that would cause them severous damages. So yeah, help them
+to live better, cause they are humans too...
+After that, VitalNet, could be used for many other things, in cityies (I reccomend it to India...) or used by a farm or idk...
+>>>>>>> 506ab9b (Install file and readme explanation)
 
+# Installation
+sudo chmod +x install.sh
+sudo ./install.sh
+sudo systemctl restart apache2
+sudo systemctl reload apache2 
 
+127.0.0.1:8081
 ## Getting started
 
 To make it easy for you to get started with GitLab, here's a list of recommended next steps.
