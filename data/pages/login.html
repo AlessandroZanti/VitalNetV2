@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html class="no-js" lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login - VitalNet</title>
+  <link rel="icon" type="image/x-icon" href="/images/VitalNet-Logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    h1 {
+      text-align: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin-bottom: 30px;
+    }
+
+    body {
+      text-align: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+
+    main {
+      background-color: white;
+      box-shadow: 1px 2px 24px rgba(0, 0, 0, 0.1);
+      padding: 80px;
+      border-radius: 32px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .input-group {
+      position: relative;
+      width: 400px;
+      margin-bottom: 18px;
+    }
+
+    .input-group label {
+      position: absolute;
+      top: 16px;
+      /* Initial position centered like a placeholder */
+      left: 20px;
+      font-size: 16px;
+      color: #888;
+      pointer-events: none;
+      transition: all 0.2s ease;
+    }
+
+    /* Move label and shrink when focused or has text */
+    .input-group input:focus+label,
+    .input-group input:not(:placeholder-shown)+label {
+      top: 6px;
+      font-size: 11px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 21px 20px 10px 20px;
+      /* Top padding increased for label space */
+      border-radius: 16px;
+      border: 1px solid #dbdbdb;
+      box-sizing: border-box;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .input-group input:focus {
+      border-color: #000;
+    }
+
+    input[type="submit"] {
+      padding: 12px 30px;
+      background-color: #000000;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #000000;
+    }
+
+    .create-account {
+      display: block;
+      text-align: left;
+      font-size: 13px;
+      color: #000;
+      text-decoration: none;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .create-account:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <div style="text-align: center; margin-bottom: 24px;">
+      <img src="/images/VitalNet-Logo.svg" alt="VitalNet Logo" height="80" />
+    </div>
+    <h1>Login to VitalNet</h1>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="username" name="username" placeholder=" " />
+        <label for="username">Username</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" name="password" placeholder=" " />
+        <label for="password">Password</label>
+        <a href="#" class="create-account">Create account</a>
+      </div>
+      <br />
+      <input type="submit" value="Login" />
+    </form>
+  </main>
+
+  <script>
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+
+        // Construye la URL con los parámetros de consulta
+        var url =
+          "/login?username=" +
+          encodeURIComponent(username) +
+          "&password=" +
+          encodeURIComponent(password);
+
+        // Envía la solicitud GET con los parámetros de consulta
+        fetch(url, {
+          method: "GET",
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              window.location.href = "/inicio";
+            } else {
+              // Si la respuesta no es exitosa, muestra un mensaje de alerta con el contenido de la respuesta recibida del servidor
+              response.text().then((data) => {
+                alert("Error: " + data);
+              });
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      });
+  </script>
+</body>
+
+</html>

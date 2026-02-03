@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/images/vitalnet-logo.svg" />
+    <link rel="stylesheet" href="./css/index.min.css" />
+    <title>Boyas - VitalNet</title>
+  </head>
+  <body>
+    <main class="site-content">
+      <div class="d-flex flex-wrap information-page">
+        <aside class="information-sidebar">
+          <div class="information-sidebar__logo">
+            <a href="/">
+              <img
+                alt="VitalNet logo"
+                src="/images/vitalnet-logo.svg"
+                height="60px"
+              />
+            </a>
+          </div>
+          <!-- El contenido del sidebar se implementará de forma automatica dentro de este elemento. -->
+          <div
+            id="sidebar-menu-content"
+            class="information-sidebar__menu"
+          ></div>
+        </aside>
+
+        <button type="button" class="information-sidebar__toggle">
+          <img
+            src="/images/arrow-right.svg"
+            alt="Arrow Right/Left Icon"
+            height="30"
+            width="30"
+          />
+        </button>
+
+        <div class="information-content">
+          <div class="tex-content">
+            <h1>Configuración</h1>
+            <br />
+
+            <button onclick="fetchWifiNetworks()">Buscar Redes WiFi</button>
+
+            <ul id="wifi-networks"></ul>
+            <div id="loading-indicator" style="display: none">Cargando...</div>
+
+            <form id="networkForm" action="" method="GET">
+              <div>
+                <label for="ssid">SSID de la Red:</label><br />
+                <input type="text" id="ssid" name="ssid" required /><br />
+              </div>
+              <div>
+                <label for="password">Contraseña de la Red:</label><br />
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  required
+                /><br />
+              </div>
+              <div>
+                <button type="submit">Guardar y Conectar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="./js/script.js"></script>
+    <script>
+      // Función async await para realizar la solicitud fetch y mostrar las redes WiFi
+      function selectSSID(ssid) {
+        document.getElementById("ssid").value = ssid;
+      }
+
+      // Función para realizar la solicitud fetch y mostrar las redes WiFi
+      async function fetchWifiNetworks() {
+        const wifiNetworks = document.getElementById("wifi-networks");
+
+        try {
+          // Realizar la solicitud fetch a '/connections-info'
+          const response = await fetch("/connections-info");
+          const data = await response.json(); // Convertir la respuesta a JSON
+
+          // Limpiar la lista antes de cargar nueva información
+          wifiNetworks.innerHTML = "";
+
+          // Iterar sobre los resultados y crear elementos de lista para cada red WiFi
+          data.scan_result.forEach((network) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = `SSID: ${network.SSID}, RSSI: ${network.RSSI}`;
+            listItem.onclick = () => selectSSID(network.SSID); // Llamar a la función selectSSID al hacer clic en el elemento
+            wifiNetworks.appendChild(listItem);
+          });
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      document
+        .getElementById("networkForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          var ssid = document.getElementById("ssid").value;
+          var password = document.getElementById("password").value;
+
+          // Construye la URL con los parámetros de consulta
+          var url =
+            "/connections?ssid=" +
+            encodeURIComponent(ssid) +
+            "&password=" +
+            encodeURIComponent(password);
+
+          // Envía la solicitud GET con los parámetros de consulta
+          fetch(url, {
+            method: "GET",
+          })
+            .then((response) => {
+              if (response.status === 200) {
+                alert("Red actualizada correctamente.");
+              } else {
+                // Si la respuesta no es exitosa, muestra un mensaje de alerta con el contenido de la respuesta recibida del servidor
+                response.text().then((data) => {
+                  alert("Error: " + data);
+                });
+              }
+            })
+            .catch((error) => console.error("Error:", error));
+        });
+    </script>
+  </body>
+</html>

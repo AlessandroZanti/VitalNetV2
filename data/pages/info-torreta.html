@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="/images/vitalnet-logo.svg" />
+    <script src="./js/highcharts.min.js"></script>
+    <link rel="stylesheet" href="./css/index.min.css" />
+    <title>Información Torreta - VitalNet</title>
+  </head>
+  <body>
+    <main class="site-content">
+      <div class="d-flex flex-wrap information-page">
+        <aside class="information-sidebar">
+          <div class="information-sidebar__logo">
+            <a href="/">
+              <img
+                alt="VitalNet logo"
+                src="/images/vitalnet-logo.svg"
+                height="60px"
+              />
+            </a>
+          </div>
+          <!-- El contenido del sidebar se implementará de forma automatica dentro de este elemento. -->
+          <div
+            id="sidebar-menu-content"
+            class="information-sidebar__menu"
+          ></div>
+        </aside>
+
+        <button type="button" class="information-sidebar__toggle">
+          <img
+            src="/images/arrow-right.svg"
+            alt="Arrow Right/Left Icon"
+            height="30"
+            width="30"
+          />
+        </button>
+
+        <div class="information-content">
+          <div class="information-content__single">
+            <div id="air_values" style="width: 100%; height: 400px"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="./js/script.js"></script>
+    <script>
+      const onChartLoad = function () {
+        const chart = this;
+
+        setInterval(function () {
+          fetch("http://192.168.4.1/air-info")
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+
+            .then((responseData) => {
+              const data = [
+                {
+                  name: "Humidity",
+                  y: responseData.humidity,
+                  z: responseData.humidity,
+                },
+                {
+                  name: "Temperature (°C)",
+                  y: responseData.tempC,
+                  z: responseData.tempC,
+                },
+                { name: "TVOC", y: responseData.tvoc, z: responseData.tvoc },
+                { name: "eCO2", y: responseData.eco2, z: responseData.eco2 },
+                { name: "AQI", y: responseData.aqi, z: responseData.aqi },
+              ];
+
+              // Actualizar los datos del gráfico
+              chart.series[0].setData(data);
+            })
+            .catch((error) => {
+              console.error(
+                "There was a problem with the fetch operation:",
+                error
+              );
+            });
+        }, 1000);
+      };
+
+      Highcharts.chart("air_values", {
+        chart: {
+          type: "pie", // Cambiamos el tipo de gráfico a pie
+          events: { load: onChartLoad },
+        },
+        title: {
+          text: "Air Quality Data", // Título del gráfico
+          align: "left",
+        },
+        tooltip: {
+          headerFormat: "",
+          pointFormat:
+            '<span style="color:{point.color}">\u25CF</span> <b> {point.name}</b><br/>' +
+            "Value: <b>{point.y}</b><br/>",
+        },
+        series: [
+          {
+            minPointSize: 10,
+            innerSize: "20%",
+            zMin: 0,
+            name: "Air Quality Metrics",
+            borderRadius: 5,
+            data: [],
+            colors: ["#4caefe", "#3dc3e8", "#2dd9db", "#1feeaf", "#0ff3a0"],
+          },
+        ],
+      });
+    </script>
+  </body>
+</html>
