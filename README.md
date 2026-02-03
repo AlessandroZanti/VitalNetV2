@@ -1,4 +1,4 @@
-# LoRa-Reciever
+# VitalNet-Reciever
 
 
 
