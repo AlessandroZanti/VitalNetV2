@@ -1,136 +1,427 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/images/vitalnet-logo.svg" />
-    <link rel="stylesheet" href="./css/index.min.css" />
-    <title>Boyas - VitalNet</title>
-  </head>
-  <body>
-    <main class="site-content">
-      <div class="d-flex flex-wrap information-page">
-        <aside class="information-sidebar">
-          <div class="information-sidebar__logo">
-            <a href="/">
-              <img
-                alt="VitalNet logo"
-                src="/images/vitalnet-logo.svg"
-                height="60px"
-              />
-            </a>
-          </div>
-          <!-- El contenido del sidebar se implementará de forma automatica dentro de este elemento. -->
-          <div
-            id="sidebar-menu-content"
-            class="information-sidebar__menu"
-          ></div>
-        </aside>
 
-        <button type="button" class="information-sidebar__toggle">
-          <img
-            src="/images/arrow-right.svg"
-            alt="Arrow Right/Left Icon"
-            height="30"
-            width="30"
-          />
-        </button>
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/svg+xml" href="/images/VitalNet-Logo.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Configuración - VitalNet</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-radius: 32px;
+      --primary-black: #000000;
+      --input-radius: 16px;
+    }
 
-        <div class="information-content">
-          <div class="tex-content">
-            <h1>Configuración</h1>
-            <br />
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-            <button onclick="fetchWifiNetworks()">Buscar Redes WiFi</button>
+    /* Background Typography Pattern */
+    .bg-words {
+      position: fixed;
+      top: 0;
+      left: -20vw;
+      width: 140vw;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-content: space-around;
+      padding: 20px;
+      opacity: 0.28;
+    }
 
-            <ul id="wifi-networks"></ul>
-            <div id="loading-indicator" style="display: none">Cargando...</div>
+    .bg-word {
+      font-size: 7.5rem;
+      font-weight: 800;
+      color: rgba(0, 0, 0, 0.12);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.9), -1px -1px 1px rgba(0, 0, 0, 0.08);
+      white-space: nowrap;
+      letter-spacing: -3px;
+      line-height: 1;
+      text-transform: capitalize;
+    }
 
-            <form id="networkForm" action="" method="GET">
-              <div>
-                <label for="ssid">SSID de la Red:</label><br />
-                <input type="text" id="ssid" name="ssid" required /><br />
-              </div>
-              <div>
-                <label for="password">Contraseña de la Red:</label><br />
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  required
-                /><br />
-              </div>
-              <div>
-                <button type="submit">Guardar y Conectar</button>
-              </div>
-            </form>
-          </div>
+    main {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .information-page {
+      display: flex;
+      width: 100%;
+    }
+
+    .information-sidebar {
+      width: 300px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .information-sidebar__logo {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .information-sidebar__logo img {
+      height: 60px;
+    }
+
+    .information-content {
+      flex: 1;
+      padding: 80px 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .text-content-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      padding: 60px;
+      border-radius: var(--card-radius);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px 30px;
+      background-color: var(--primary-black);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    ul#wifi-networks {
+      list-style: none;
+      padding: 0;
+      margin: 20px 0;
+      max-height: 200px;
+      overflow-y: auto;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+    }
+
+    ul#wifi-networks li {
+      padding: 12px 20px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+      cursor: pointer;
+      transition: background 0.2s ease;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    ul#wifi-networks li:hover {
+      background: rgba(0, 0, 0, 0.02);
+      color: var(--primary-black);
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #666;
+      padding-left: 5px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: var(--input-radius);
+      border: 1px solid #dbdbdb;
+      box-sizing: border-box;
+      outline: none;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus {
+      border-color: var(--primary-black);
+    }
+
+    .information-sidebar__toggle {
+      display: none;
+    }
+
+    @media (max-width: 992px) {
+      .information-sidebar {
+        display: none;
+      }
+
+      .text-content-card {
+        padding: 40px 20px;
+      }
+    }
+
+    /* User Menu Styles */
+    .user-menu-wrapper {
+      position: fixed;
+      top: 30px;
+      right: 40px;
+      z-index: 9999;
+    }
+
+    .user-avatar-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-avatar-btn:hover {
+      transform: scale(1.05);
+      background: #fff;
+    }
+
+    .user-avatar-btn img {
+      width: 24px;
+      height: 24px;
+      opacity: 0.7;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 200px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(25px);
+      border-radius: 20px;
+      padding: 15px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transform: translateY(10px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .user-dropdown.is-active {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .user-dropdown-header {
+      padding: 0 20px 10px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-weight: 700;
+      color: #000;
+      font-size: 1rem;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: rgba(0, 0, 0, 0.05);
+      margin: 5px 0;
+    }
+
+    .user-dropdown-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .user-dropdown-list li a {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #444;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .user-dropdown-list li a:hover {
+      background: rgba(0, 0, 0, 0.03);
+      color: #000;
+    }
+
+    .user-dropdown-list li.logout a {
+      color: #ff3b30;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-words">
+    <span class="bg-word">security</span>
+    <span class="bg-word">health</span>
+    <span class="bg-word">human life</span>
+    <span class="bg-word">equality</span>
+    <span class="bg-word">opportunity</span>
+    <span class="bg-word">goodness</span>
+    <span class="bg-word">water</span>
+    <span class="bg-word">environment</span>
+    <span class="bg-word">sustainability</span>
+    <span class="bg-word">wind</span>
+    <span class="bg-word">protection</span>
+    <span class="bg-word">monitoring</span>
+    <span class="bg-word">vital</span>
+    <span class="bg-word">nature</span>
+    <span class="bg-word">innovation</span>
+    <span class="bg-word">future</span>
+    <span class="bg-word">care</span>
+    <span class="bg-word">quality</span>
+    <span class="bg-word">reliability</span>
+    <span class="bg-word">trust</span>
+    <span class="bg-word">progress</span>
+    <span class="bg-word">safety</span>
+    <span class="bg-word">well-being</span>
+  </div>
+
+  <main>
+    <div class="d-flex flex-wrap information-page">
+      <aside class="information-sidebar">
+        <div class="information-sidebar__logo">
+          <a href="/inicio">
+            <img alt="VitalNet logo" src="/images/VitalNet-Logo.svg" />
+          </a>
+        </div>
+        <div id="sidebar-menu-content" class="information-sidebar__menu"></div>
+      </aside>
+
+      <div class="information-content">
+        <div class="text-content-card">
+          <h1>Configuración</h1>
+
+          <button onclick="fetchWifiNetworks()">Buscar Redes WiFi</button>
+
+          <div id="loading-indicator" style="display: none">Cargando...</div>
+          <ul id="wifi-networks"></ul>
+
+          <form id="networkForm" action="" method="GET">
+            <div class="input-group">
+              <label for="ssid">SSID de la Red</label>
+              <input type="text" id="ssid" name="ssid" required placeholder="Selecciona una red o escribe aquí..." />
+            </div>
+            <div class="input-group">
+              <label for="password">Contraseña de la Red</label>
+              <input type="password" id="password" name="password" required placeholder="Escribe la contraseña..." />
+            </div>
+            <button type="submit">Guardar y Conectar</button>
+          </form>
         </div>
       </div>
-    </main>
-    <script src="./js/script.js"></script>
-    <script>
-      // Función async await para realizar la solicitud fetch y mostrar las redes WiFi
-      function selectSSID(ssid) {
-        document.getElementById("ssid").value = ssid;
-      }
+    </div>
+  </main>
 
-      // Función para realizar la solicitud fetch y mostrar las redes WiFi
-      async function fetchWifiNetworks() {
-        const wifiNetworks = document.getElementById("wifi-networks");
+  <script src="./js/script.js"></script>
+  <script>
+    function selectSSID(ssid) {
+      document.getElementById("ssid").value = ssid;
+    }
 
-        try {
-          // Realizar la solicitud fetch a '/connections-info'
-          const response = await fetch("/connections-info");
-          const data = await response.json(); // Convertir la respuesta a JSON
+    async function fetchWifiNetworks() {
+      const wifiNetworks = document.getElementById("wifi-networks");
+      const loading = document.getElementById("loading-indicator");
+      loading.style.display = "block";
 
-          // Limpiar la lista antes de cargar nueva información
-          wifiNetworks.innerHTML = "";
+      try {
+        const response = await fetch("/connections-info");
+        const data = await response.json();
+        wifiNetworks.innerHTML = "";
 
-          // Iterar sobre los resultados y crear elementos de lista para cada red WiFi
-          data.scan_result.forEach((network) => {
-            const listItem = document.createElement("li");
-            listItem.textContent = `SSID: ${network.SSID}, RSSI: ${network.RSSI}`;
-            listItem.onclick = () => selectSSID(network.SSID); // Llamar a la función selectSSID al hacer clic en el elemento
-            wifiNetworks.appendChild(listItem);
-          });
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      }
-
-      document
-        .getElementById("networkForm")
-        .addEventListener("submit", function (event) {
-          event.preventDefault();
-
-          var ssid = document.getElementById("ssid").value;
-          var password = document.getElementById("password").value;
-
-          // Construye la URL con los parámetros de consulta
-          var url =
-            "/connections?ssid=" +
-            encodeURIComponent(ssid) +
-            "&password=" +
-            encodeURIComponent(password);
-
-          // Envía la solicitud GET con los parámetros de consulta
-          fetch(url, {
-            method: "GET",
-          })
-            .then((response) => {
-              if (response.status === 200) {
-                alert("Red actualizada correctamente.");
-              } else {
-                // Si la respuesta no es exitosa, muestra un mensaje de alerta con el contenido de la respuesta recibida del servidor
-                response.text().then((data) => {
-                  alert("Error: " + data);
-                });
-              }
-            })
-            .catch((error) => console.error("Error:", error));
+        data.scan_result.forEach((network) => {
+          const listItem = document.createElement("li");
+          listItem.innerHTML = `<strong>${network.SSID}</strong> <small style="float:right">${network.RSSI} dBm</small>`;
+          listItem.onclick = () => selectSSID(network.SSID);
+          wifiNetworks.appendChild(listItem);
         });
-    </script>
-  </body>
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        loading.style.display = "none";
+      }
+    }
+
+    document.getElementById("networkForm").addEventListener("submit", function (event) {
+      event.preventDefault();
+      var ssid = document.getElementById("ssid").value;
+      var password = document.getElementById("password").value;
+      var url = "/connections?ssid=" + encodeURIComponent(ssid) + "&password=" + encodeURIComponent(password);
+
+      fetch(url, { method: "GET" })
+        .then((response) => {
+          if (response.status === 200) {
+            alert("Red actualizada correctamente.");
+          } else {
+            response.text().then((data) => { alert("Error: " + data); });
+          }
+        })
+        .catch((error) => console.error("Error:", error));
+    });
+  </script>
+</body>
+
 </html>

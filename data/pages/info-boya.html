@@ -1,266 +1,355 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/images/vitalnet-logo.svg" />
-    <script src="./js/highcharts.min.js"></script>
-    <link rel="stylesheet" href="./css/index.min.css" />
-    <title>Información Boya - VitalNet</title>
-  </head>
-  <body>
-    <main class="site-content">
-      <div class="d-flex flex-wrap information-page">
-        <aside class="information-sidebar">
-          <div class="information-sidebar__logo">
-            <a href="/">
-              <img
-                alt="VitalNet logo"
-                src="/images/vitalnet-logo.svg"
-                height="60px"
-              />
-            </a>
-          </div>
-          <!-- El contenido del sidebar se implementará de forma automatica dentro de este elemento. -->
-          <div
-            id="sidebar-menu-content"
-            class="information-sidebar__menu"
-          ></div>
-        </aside>
 
-        <button type="button" class="information-sidebar__toggle">
-          <img
-            src="/images/arrow-right.svg"
-            alt="Arrow Right/Left Icon"
-            height="30"
-            width="30"
-          />
-        </button>
+<head>
+  <meta charset="utf-8" />
+  <meta name="description" content="" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/svg+xml" href="/images/VitalNet-Logo.svg" />
+  <script src="./js/highcharts.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Información Boya - VitalNet</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-radius: 32px;
+      --primary-black: #000000;
+    }
 
-        <div class="information-content">
-          <div class="information-content__single">
-            <div id="circle_element" style="width: 100%; height: 400px"></div>
-            <script>
-              Highcharts.chart("circle_element", {
-                chart: {
-                  type: "pie",
-                },
-                title: {
-                  text: "Composición del gua",
-                },
-                tooltip: {
-                  valueSuffix: "%",
-                },
-                subtitle: {
-                  text: "Estado actual de las medidas obtenidas.",
-                },
-                plotOptions: {
-                  series: {
-                    allowPointSelect: true,
-                    cursor: "pointer",
-                    dataLabels: [
-                      {
-                        enabled: true,
-                        distance: 20,
-                      },
-                      {
-                        enabled: true,
-                        distance: -40,
-                        format: "{point.percentage:.1f}%",
-                        style: {
-                          fontSize: "1.2em",
-                          textOutline: "none",
-                          opacity: 0.7,
-                        },
-                        filter: {
-                          operator: ">",
-                          property: "percentage",
-                          value: 10,
-                        },
-                      },
-                    ],
-                  },
-                },
-                series: [
-                  {
-                    name: "Percentage",
-                    colorByPoint: true,
-                    data: [
-                      {
-                        name: "Water",
-                        y: 55.02,
-                      },
-                      {
-                        name: "Fat",
-                        sliced: true,
-                        selected: true,
-                        y: 26.71,
-                      },
-                      {
-                        name: "Carbohydrates",
-                        y: 1.09,
-                      },
-                      {
-                        name: "Protein",
-                        y: 15.5,
-                      },
-                      {
-                        name: "Ash",
-                        y: 1.68,
-                      },
-                    ],
-                  },
-                ],
-              });
-            </script>
-          </div>
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Background Typography Pattern */
+    .bg-words {
+      position: fixed;
+      top: 0;
+      left: -20vw;
+      width: 140vw;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-content: space-around;
+      padding: 20px;
+      opacity: 0.28;
+    }
+
+    .bg-word {
+      font-size: 7.5rem;
+      font-weight: 800;
+      color: rgba(0, 0, 0, 0.12);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.05) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.9), -1px -1px 1px rgba(0, 0, 0, 0.08);
+      white-space: nowrap;
+      letter-spacing: -3px;
+      line-height: 1;
+      text-transform: capitalize;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .information-page {
+      display: flex;
+      width: 100%;
+    }
+
+    .information-sidebar {
+      width: 300px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .information-sidebar__logo {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .information-sidebar__logo img {
+      height: 60px;
+    }
+
+    .information-content-wrapper {
+      flex: 1;
+      padding: 80px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .chart-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(30px);
+      padding: 40px;
+      border-radius: var(--card-radius);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* User Menu Styles */
+    .user-menu-wrapper {
+      position: fixed;
+      top: 30px;
+      right: 40px;
+      z-index: 9999;
+    }
+
+    .user-avatar-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-avatar-btn:hover {
+      transform: scale(1.05);
+      background: #fff;
+    }
+
+    .user-avatar-btn img {
+      width: 24px;
+      height: 24px;
+      opacity: 0.7;
+    }
+
+    .user-dropdown {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 200px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(25px);
+      border-radius: 20px;
+      padding: 15px 0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transform: translateY(10px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .user-dropdown.is-active {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .user-dropdown-header {
+      padding: 0 20px 10px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .user-name {
+      font-weight: 700;
+      color: #000;
+      font-size: 1rem;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      color: #888;
+    }
+
+    .user-dropdown-divider {
+      height: 1px;
+      background: rgba(0, 0, 0, 0.05);
+      margin: 5px 0;
+    }
+
+    .user-dropdown-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .user-dropdown-list li a {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: #444;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s ease;
+    }
+
+    .user-dropdown-list li a:hover {
+      background: rgba(0, 0, 0, 0.03);
+      color: #000;
+    }
+
+    .user-dropdown-list li.logout a {
+      color: #ff3b30;
+    }
+
+    .information-sidebar__toggle {
+      display: none;
+    }
+
+    @media (max-width: 992px) {
+      .information-sidebar {
+        display: none;
+      }
+
+      .information-content-wrapper {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-words">
+    <span class="bg-word">security</span>
+    <span class="bg-word">health</span>
+    <span class="bg-word">human life</span>
+    <span class="bg-word">equality</span>
+    <span class="bg-word">opportunity</span>
+    <span class="bg-word">goodness</span>
+    <span class="bg-word">water</span>
+    <span class="bg-word">environment</span>
+    <span class="bg-word">sustainability</span>
+    <span class="bg-word">wind</span>
+    <span class="bg-word">protection</span>
+    <span class="bg-word">monitoring</span>
+    <span class="bg-word">vital</span>
+    <span class="bg-word">nature</span>
+    <span class="bg-word">innovation</span>
+    <span class="bg-word">future</span>
+    <span class="bg-word">care</span>
+    <span class="bg-word">quality</span>
+    <span class="bg-word">reliability</span>
+    <span class="bg-word">trust</span>
+    <span class="bg-word">progress</span>
+    <span class="bg-word">safety</span>
+    <span class="bg-word">well-being</span>
+  </div>
+
+  <main>
+    <div class="information-page">
+      <aside class="information-sidebar">
+        <div class="information-sidebar__logo">
+          <a href="/inicio">
+            <img alt="VitalNet logo" src="/images/VitalNet-Logo.svg" />
+          </a>
+        </div>
+        <div id="sidebar-menu-content" class="information-sidebar__menu"></div>
+      </aside>
+
+      <div class="information-content-wrapper">
+        <div class="chart-card">
+          <div id="circle_element" style="width: 100%; height: 400px"></div>
         </div>
 
-        <div class="information-content">
-          <div class="information-content__single">
-            <div id="random_values" style="width: 100%; height: 400px"></div>
-            <script>
-              // On chart load, start an interval that adds points to the chart and animate
-              // the pulsating marker.
-              const onChartLoad = function () {
-                const chart = this,
-                  series = chart.series[0];
-
-                setInterval(function () {
-                  const x = new Date().getTime(), // current time
-                    y = Math.random();
-
-                  series.addPoint([x, y], true, true);
-                }, 1000);
-              };
-
-              // Create the initial data
-              const data = (function () {
-                const data = [];
-                const time = new Date().getTime();
-
-                for (let i = -19; i <= 0; i += 1) {
-                  data.push({
-                    x: time + i * 1000,
-                    y: Math.random(),
-                  });
-                }
-                return data;
-              })();
-
-              // Plugin to add a pulsating marker on add point
-              Highcharts.addEvent(Highcharts.Series, "addPoint", (e) => {
-                const point = e.point,
-                  series = e.target;
-
-                if (!series.pulse) {
-                  series.pulse = series.chart.renderer
-                    .circle()
-                    .add(series.markerGroup);
-                }
-
-                setTimeout(() => {
-                  series.pulse
-                    .attr({
-                      x: series.xAxis.toPixels(point.x, true),
-                      y: series.yAxis.toPixels(point.y, true),
-                      r: series.options.marker.radius,
-                      opacity: 1,
-                      fill: series.color,
-                    })
-                    .animate(
-                      {
-                        r: 20,
-                        opacity: 0,
-                      },
-                      {
-                        duration: 1000,
-                      }
-                    );
-                }, 1);
-              });
-
-              Highcharts.chart("random_values", {
-                chart: {
-                  type: "spline",
-                  events: {
-                    load: onChartLoad,
-                  },
-                },
-
-                time: {
-                  useUTC: false,
-                },
-
-                title: {
-                  text: "Live random data",
-                },
-
-                accessibility: {
-                  announceNewData: {
-                    enabled: true,
-                    minAnnounceInterval: 15000,
-                    announcementFormatter: function (
-                      allSeries,
-                      newSeries,
-                      newPoint
-                    ) {
-                      if (newPoint) {
-                        return "New point added. Value: " + newPoint.y;
-                      }
-                      return false;
-                    },
-                  },
-                },
-
-                xAxis: {
-                  type: "datetime",
-                  tickPixelInterval: 150,
-                  maxPadding: 0.1,
-                },
-
-                yAxis: {
-                  title: {
-                    text: "Value",
-                  },
-                  plotLines: [
-                    {
-                      value: 0,
-                      width: 1,
-                      color: "#808080",
-                    },
-                  ],
-                },
-
-                tooltip: {
-                  headerFormat: "<b>{series.name}</b><br/>",
-                  pointFormat: "{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}",
-                },
-
-                legend: {
-                  enabled: false,
-                },
-
-                exporting: {
-                  enabled: false,
-                },
-
-                series: [
-                  {
-                    name: "Random data",
-                    lineWidth: 2,
-                    color: Highcharts.getOptions().colors[2],
-                    data,
-                  },
-                ],
-              });
-            </script>
-          </div>
+        <div class="chart-card">
+          <div id="random_values" style="width: 100%; height: 400px"></div>
         </div>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script src="./js/script.js"></script>
-  </body>
+  <script>
+    // Global Highcharts theme adjustment
+    Highcharts.setOptions({
+      chart: {
+        backgroundColor: 'transparent',
+        style: { fontFamily: 'Inter' }
+      },
+      title: { style: { fontWeight: '700', color: '#000' } },
+      credits: { enabled: false }
+    });
+
+    Highcharts.chart("circle_element", {
+      chart: { type: "pie" },
+      title: { text: "Calidad del Entorno" },
+      tooltip: { valueSuffix: "%" },
+      subtitle: { text: "Estado actual de las medidas ambientales." },
+      plotOptions: {
+        series: {
+          allowPointSelect: true,
+          cursor: "pointer",
+          dataLabels: [
+            { enabled: true, distance: 20 },
+            { enabled: true, distance: -40, format: "{point.percentage:.1f}%", style: { fontSize: "1.2em", textOutline: "none", opacity: 0.7 } }
+          ],
+        },
+      },
+      series: [{
+        name: "Nivel",
+        colorByPoint: true,
+        data: [
+          { name: "Humedad", y: 45.5 },
+          { name: "Temperatura", sliced: true, selected: true, y: 22.3 },
+          { name: "CO2", y: 15.2 },
+          { name: "Oxígeno", y: 12.0 },
+          { name: "Presión", y: 5.0 }
+        ],
+      }],
+    });
+
+    const onChartLoad = function () {
+      const chart = this, series = chart.series[0];
+      setInterval(function () {
+        const x = new Date().getTime(), y = Math.random();
+        series.addPoint([x, y], true, true);
+      }, 5000);
+    };
+
+    const initialData = (function () {
+      const data = [];
+      const time = new Date().getTime();
+      for (let i = -19; i <= 0; i += 1) { data.push({ x: time + i * 5000, y: Math.random() }); }
+      return data;
+    })();
+
+    Highcharts.chart("random_values", {
+      chart: { type: "spline", events: { load: onChartLoad } },
+      time: { useUTC: false },
+      title: { text: "Monitoreo en Tiempo Real (cada 5s)" },
+      xAxis: { type: "datetime", tickPixelInterval: 150, maxPadding: 0.1 },
+      yAxis: { title: { text: "Valor" }, plotLines: [{ value: 0, width: 1, color: "#808080" }] },
+      tooltip: { headerFormat: "<b>{series.name}</b><br/>", pointFormat: "{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}" },
+      legend: { enabled: false },
+      exporting: { enabled: false },
+      series: [{ name: "Datos Ambientales", lineWidth: 3, color: "#000", data: initialData }],
+    });
+  </script>
+  <script src="./js/script.js"></script>
+</body>
+
 </html>
