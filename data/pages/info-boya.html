@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
-  <title>Información Boya - VitalNet</title>
+  <title>Buoy Information - VitalNet</title>
   <style>
     :root {
       --bg-color: #ffffff;
@@ -515,9 +515,9 @@
 
     Highcharts.chart("circle_element", {
       chart: { type: "pie" },
-      title: { text: "Calidad del Entorno" },
+      title: { text: "Environment Quality" },
       tooltip: { valueSuffix: "%" },
-      subtitle: { text: "Estado actual de las medidas ambientales." },
+      subtitle: { text: "Current state of environmental measures." },
       plotOptions: {
         series: {
           allowPointSelect: true,
@@ -529,14 +529,14 @@
         },
       },
       series: [{
-        name: "Nivel",
+        name: "Level",
         colorByPoint: true,
         data: [
-          { name: "Humedad", y: 45.5 },
-          { name: "Temperatura", sliced: true, selected: true, y: 22.3 },
+          { name: "Humidity", y: 45.5 },
+          { name: "Temperature", sliced: true, selected: true, y: 22.3 },
           { name: "CO2", y: 15.2 },
-          { name: "Oxígeno", y: 12.0 },
-          { name: "Presión", y: 5.0 }
+          { name: "Oxygen", y: 12.0 },
+          { name: "Pressure", y: 5.0 }
         ],
       }],
     });
@@ -559,13 +559,13 @@
     Highcharts.chart("random_values", {
       chart: { type: "spline", events: { load: onChartLoad } },
       time: { useUTC: false },
-      title: { text: "Monitoreo en Tiempo Real (cada 5s)" },
+      title: { text: "Real-Time Monitoring (every 5s)" },
       xAxis: { type: "datetime", tickPixelInterval: 150, maxPadding: 0.1 },
-      yAxis: { title: { text: "Valor" }, plotLines: [{ value: 0, width: 1, color: "#808080" }] },
+      yAxis: { title: { text: "Value" }, plotLines: [{ value: 0, width: 1, color: "#808080" }] },
       tooltip: { headerFormat: "<b>{series.name}</b><br/>", pointFormat: "{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}" },
       legend: { enabled: false },
       exporting: { enabled: false },
-      series: [{ name: "Datos Ambientales", lineWidth: 3, color: "#000", data: initialData }],
+      series: [{ name: "Environmental Data", lineWidth: 3, color: "#000", data: initialData }],
     });
   </script>
   <script src="./js/script.js"></script>

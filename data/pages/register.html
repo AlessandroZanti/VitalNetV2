@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="description" content="Create an account on VitalNet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register - VitalNet</title>
+    <link rel="icon" type="image/x-icon" href="/images/VitalNet-Logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        h1 {
+            text-align: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        body {
+            text-align: center;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #e8eaed;
+            overflow-x: hidden;
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .bg-words {
+            position: fixed;
+            top: 0;
+            left: -20vw;
+            width: 140vw;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 5px 15px;
+            align-content: flex-start;
+            padding: 10px;
+            opacity: 0.75;
+        }
+
+        .bg-word {
+            font-size: 6rem;
+            font-weight: 800;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            background: linear-gradient(165deg,
+                    rgba(255, 255, 255, 1.0) 0%,
+                    rgba(255, 255, 255, 0.4) 35%,
+                    rgba(255, 255, 255, 0.6) 50%,
+                    rgba(255, 255, 255, 0.4) 65%,
+                    rgba(255, 255, 255, 0.9) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow:
+                -1px -1px 0px rgba(255, 255, 255, 1.0),
+                1px 1px 1px rgba(0, 0, 0, 0.1),
+                0px 0px 25px rgba(255, 255, 255, 0.5);
+            -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.2);
+            white-space: nowrap;
+            letter-spacing: -3px;
+            line-height: 0.85;
+            text-transform: none;
+        }
+
+        main {
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            padding: 50px 60px;
+            border-radius: 32px;
+            width: 100%;
+            max-width: 550px;
+            box-sizing: border-box;
+            margin: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .input-group {
+            position: relative;
+            flex: 1;
+            text-align: left;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 16px;
+            left: 20px;
+            font-size: 16px;
+            color: #888;
+            pointer-events: none;
+            transition: all 0.2s ease;
+        }
+
+        .input-group input:focus+label,
+        .input-group input:not(:placeholder-shown)+label,
+        .input-group select:focus+label,
+        .input-group select:not([value=""])+label {
+            top: 6px;
+            font-size: 11px;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 21px 20px 10px 20px;
+            border-radius: 16px;
+            border: 1px solid #dbdbdb;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 16px;
+            background: white;
+            font-family: inherit;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #000;
+        }
+
+        .section-label {
+            text-align: left;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            padding-left: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 30px;
+            background-color: #000000;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+        }
+
+        .btn-cancel {
+            background-color: #000000;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 25px 0;
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23888%22%20d%3D%22M10.293%203.293L6%207.586%201.707%203.293%200.293%204.707%206%2010.414l5.707-5.707z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-words">
+        <span class="bg-word">security</span><span class="bg-word">health</span><span class="bg-word">human life</span>
+        <span class="bg-word">equality</span><span class="bg-word">opportunity</span><span
+            class="bg-word">goodness</span>
+        <span class="bg-word">water</span><span class="bg-word">environment</span><span
+            class="bg-word">sustainability</span>
+        <span class="bg-word">wind</span><span class="bg-word">protection</span><span class="bg-word">monitoring</span>
+        <span class="bg-word">vital</span><span class="bg-word">nature</span><span class="bg-word">innovation</span>
+        <span class="bg-word">future</span><span class="bg-word">care</span><span class="bg-word">quality</span>
+        <span class="bg-word">reliability</span><span class="bg-word">empowerment</span><span
+            class="bg-word">trust</span>
+        <span class="bg-word">growth</span><span class="bg-word">progress</span><span class="bg-word">safety</span>
+        <span class="bg-word">well-being</span><span class="bg-word">support</span><span class="bg-word">service</span>
+        <span class="bg-word">security</span><span class="bg-word">health</span><span class="bg-word">human life</span>
+        <span class="bg-word">equality</span><span class="bg-word">opportunity</span><span
+            class="bg-word">goodness</span>
+        <span class="bg-word">water</span><span class="bg-word">environment</span><span
+            class="bg-word">sustainability</span>
+        <span class="bg-word">wind</span><span class="bg-word">protection</span><span class="bg-word">monitoring</span>
+        <span class="bg-word">vital</span><span class="bg-word">nature</span><span class="bg-word">innovation</span>
+        <span class="bg-word">future</span><span class="bg-word">care</span><span class="bg-word">quality</span>
+        <span class="bg-word">reliability</span><span class="bg-word">empowerment</span><span
+            class="bg-word">trust</span>
+        <span class="bg-word">growth</span><span class="bg-word">progress</span><span class="bg-word">safety</span>
+        <span class="bg-word">well-being</span><span class="bg-word">support</span><span class="bg-word">service</span>
+        <span class="bg-word">security</span><span class="bg-word">health</span><span class="bg-word">human life</span>
+        <span class="bg-word">equality</span><span class="bg-word">opportunity</span><span
+            class="bg-word">goodness</span>
+        <span class="bg-word">water</span><span class="bg-word">environment</span><span
+            class="bg-word">sustainability</span>
+        <span class="bg-word">wind</span><span class="bg-word">protection</span><span class="bg-word">monitoring</span>
+        <span class="bg-word">vital</span><span class="bg-word">nature</span><span class="bg-word">innovation</span>
+        <span class="bg-word">future</span><span class="bg-word">care</span><span class="bg-word">quality</span>
+        <span class="bg-word">reliability</span><span class="bg-word">empowerment</span><span
+            class="bg-word">trust</span>
+        <span class="bg-word">growth</span><span class="bg-word">progress</span><span class="bg-word">safety</span>
+        <span class="bg-word">well-being</span><span class="bg-word">support</span><span class="bg-word">service</span>
+        <span class="bg-word">security</span><span class="bg-word">health</span><span class="bg-word">human life</span>
+        <span class="bg-word">equality</span><span class="bg-word">opportunity</span><span
+            class="bg-word">goodness</span>
+        <span class="bg-word">water</span><span class="bg-word">environment</span><span
+            class="bg-word">sustainability</span>
+        <span class="bg-word">wind</span><span class="bg-word">protection</span><span class="bg-word">monitoring</span>
+        <span class="bg-word">vital</span><span class="bg-word">nature</span><span class="bg-word">innovation</span>
+        <span class="bg-word">future</span><span class="bg-word">care</span><span class="bg-word">quality</span>
+        <span class="bg-word">reliability</span><span class="bg-word">empowerment</span><span
+            class="bg-word">trust</span>
+        <span class="bg-word">growth</span><span class="bg-word">progress</span><span class="bg-word">safety</span>
+        <span class="bg-word">well-being</span><span class="bg-word">support</span><span class="bg-word">service</span>
+        <span class="bg-word">security</span><span class="bg-word">health</span><span class="bg-word">human life</span>
+        <span class="bg-word">equality</span><span class="bg-word">opportunity</span><span
+            class="bg-word">goodness</span>
+        <span class="bg-word">water</span><span class="bg-word">environment</span><span
+            class="bg-word">sustainability</span>
+        <span class="bg-word">wind</span><span class="bg-word">protection</span><span class="bg-word">monitoring</span>
+        <span class="bg-word">vital</span><span class="bg-word">nature</span><span class="bg-word">innovation</span>
+        <span class="bg-word">future</span><span class="bg-word">care</span><span class="bg-word">quality</span>
+        <span class="bg-word">reliability</span><span class="bg-word">empowerment</span><span
+            class="bg-word">trust</span>
+        <span class="bg-word">growth</span><span class="bg-word">progress</span><span class="bg-word">safety</span>
+        <span class="bg-word">well-being</span><span class="bg-word">support</span><span class="bg-word">service</span>
+    </div>
+
+    <main>
+        <div style="text-align: center; margin-bottom: 24px;">
+            <img src="/images/VitalNet-Logo.svg" alt="VitalNet Logo" height="80" />
+        </div>
+        <h1>Create your VitalNet account</h1>
+
+        <form id="registerForm">
+            <div class="input-group" style="margin-bottom: 18px;">
+                <input type="text" id="license" name="license" placeholder=" " required />
+                <label for="license">Product license</label>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <input type="text" id="name" name="name" placeholder=" " required />
+                    <label for="name">Name</label>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="surnames" name="surnames" placeholder=" " required />
+                    <label for="surnames">Surnames</label>
+                </div>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 18px;">
+                <select id="country" name="country" required onchange="this.setAttribute('value', this.value);">
+                    <option value="" disabled selected hidden></option>
+                </select>
+                <label for="country">Country / Region</label>
+            </div>
+
+            <div class="section-label">Date of Birth</div>
+            <div class="input-row">
+                <div class="input-group">
+                    <select id="dob-day" name="dob-day" required onchange="this.setAttribute('value', this.value);">
+                        <option value="" disabled selected hidden></option>
+                    </select>
+                    <label for="dob-day">Day</label>
+                </div>
+                <div class="input-group">
+                    <select id="dob-month" name="dob-month" required onchange="this.setAttribute('value', this.value);">
+                        <option value="" disabled selected hidden></option>
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                    <label for="dob-month">Month</label>
+                </div>
+                <div class="input-group">
+                    <select id="dob-year" name="dob-year" required onchange="this.setAttribute('value', this.value);">
+                        <option value="" disabled selected hidden></option>
+                    </select>
+                    <label for="dob-year">Year</label>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="input-group" style="margin-bottom: 18px;">
+                <input type="email" id="email" name="email" placeholder=" " required />
+                <label for="email">name@example.com</label>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 18px;">
+                <input type="password" id="password" name="password" placeholder=" " required />
+                <label for="password">Password</label>
+            </div>
+
+            <div class="input-group" style="margin-bottom: 18px;">
+                <input type="password" id="confirm-password" name="confirm-password" placeholder=" " required />
+                <label for="confirm-password">Confirm password</label>
+            </div>
+
+            <div class="section-label">Telephone</div>
+            <div class="input-row">
+                <div class="input-group" style="flex: 0 0 120px;">
+                    <select id="phone-prefix" name="phone-prefix" required
+                        onchange="this.setAttribute('value', this.value);">
+                    </select>
+                    <label for="phone-prefix">Prefix</label>
+                </div>
+                <div class="input-group">
+                    <input type="tel" id="telephone" name="telephone" placeholder=" " required />
+                    <label for="telephone">Phone number</label>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel"
+                    onclick="window.location.href='/login.html'">Cancel</button>
+                <button type="submit" class="btn btn-confirm">Confirm</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // Populate Days
+        const daySelect = document.getElementById('dob-day');
+        for (let i = 1; i <= 31; i++) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = i;
+            daySelect.appendChild(opt);
+        }
+
+        // Populate Years
+        const yearSelect = document.getElementById('dob-year');
+        const currentYear = new Date().getFullYear();
+        for (let i = currentYear; i >= currentYear - 100; i--) {
+            const opt = document.createElement('option');
+            opt.value = i;
+            opt.textContent = i;
+            yearSelect.appendChild(opt);
+        }
+
+        const countries = [
+            { name: "Spain", code: "ES", prefix: "+34" },
+            { name: "United States", code: "US", prefix: "+1" },
+            { name: "Mexico", code: "MX", prefix: "+52" },
+            { name: "Argentina", code: "AR", prefix: "+54" },
+            { name: "Colombia", code: "CO", prefix: "+57" },
+            { name: "Chile", code: "CL", prefix: "+56" },
+            { name: "Peru", code: "PE", prefix: "+51" },
+            { name: "France", code: "FR", prefix: "+33" },
+            { name: "Italy", code: "IT", prefix: "+39" },
+            { name: "Portugal", code: "PT", prefix: "+351" },
+            { name: "Germany", code: "DE", prefix: "+49" },
+            { name: "United Kingdom", code: "GB", prefix: "+44" },
+            { name: "Andorra", code: "AD", prefix: "+376" },
+            { name: "Bolivia", code: "BO", prefix: "+591" },
+            { name: "Brazil", code: "BR", prefix: "+55" },
+            { name: "Canada", code: "CA", prefix: "+1" },
+            { name: "Costa Rica", code: "CR", prefix: "+506" },
+            { name: "Cuba", code: "CU", prefix: "+53" },
+            { name: "Ecuador", code: "EC", prefix: "+593" },
+            { name: "El Salvador", code: "SV", prefix: "+503" },
+            { name: "Guatemala", code: "GT", prefix: "+502" },
+            { name: "Honduras", code: "HN", prefix: "+504" },
+            { name: "Nicaragua", code: "NI", prefix: "+505" },
+            { name: "Panama", code: "PA", prefix: "+507" },
+            { name: "Paraguay", code: "PY", prefix: "+595" },
+            { name: "Puerto Rico", code: "PR", prefix: "+1" },
+            { name: "Dominican Republic", code: "DO", prefix: "+1" },
+            { name: "Uruguay", code: "UY", prefix: "+598" },
+            { name: "Venezuela", code: "VE", prefix: "+58" }
+        ];
+
+        const countrySelect = document.getElementById('country');
+        const prefixSelect = document.getElementById('phone-prefix');
+
+        countries.sort((a, b) => a.name.localeCompare(b.name)).forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.code;
+            opt.textContent = c.name;
+            countrySelect.appendChild(opt);
+
+            const pOpt = document.createElement('option');
+            pOpt.value = c.prefix;
+            pOpt.textContent = c.prefix + ' (' + c.name + ')';
+            prefixSelect.appendChild(pOpt);
+        });
+
+        // Default selection
+        countrySelect.value = "ES";
+        countrySelect.setAttribute('value', 'ES');
+        prefixSelect.value = "+34";
+        prefixSelect.setAttribute('value', '+34');
+
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const pw = document.getElementById('password').value;
+            const cpw = document.getElementById('confirm-password').value;
+            if (pw !== cpw) {
+                alert("Passwords do not match");
+                return;
+            }
+            alert("Registration complete (Simulation)");
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+
+</html>
