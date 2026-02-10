@@ -8,14 +8,40 @@ const darkModeStyles = `
   .dark-mode .information-sidebar,
   .dark-mode .settings-panel,
   .dark-mode .information-content__single,
-  .dark-mode .information-links__single {
-    background-color: rgba(20, 20, 20, 0.95) !important;
+  .dark-mode .information-links__single,
+  .dark-mode main {
+    background-color: rgba(18, 18, 18, 0.95) !important;
     color: #ffffff !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  .dark-mode input[type="text"],
+  .dark-mode input[type="password"],
+  .dark-mode input[type="email"],
+  .dark-mode input[type="tel"],
+  .dark-mode select,
+  .dark-mode textarea {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+  }
+  .dark-mode ::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+  }
+  .dark-mode option {
+    background-color: #333;
+    color: #fff;
+  }
+  .dark-mode label, .dark-mode h1, .dark-mode .create-account {
+    color: #ffffff !important;
   }
   .dark-mode .information-sidebar__logo img,
-  .dark-mode .user-avatar-btn img {
-    filter: invert(1);
+  .dark-mode .user-avatar-btn img,
+  .dark-mode .user-dropdown-list li img,
+  .dark-mode .information-links__icon img,
+  .dark-mode .site-header img,
+  .dark-mode .footer-elements img,
+  .dark-mode main img {
+    filter: invert(1) brightness(2);
   }
   .dark-mode .user-dropdown {
     background: rgba(30, 30, 30, 0.98) !important;
@@ -32,7 +58,15 @@ const darkModeStyles = `
     text-shadow: none !important;
     opacity: 0.3 !important;
   }
+  .dark-mode #theme-toggle-btn {
+    background: rgba(30, 30, 30, 0.9) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+  }
 `;
+
+const sunIconContent = `<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>`;
+const moonIconContent = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>`;
 
 function injectDarkMode() {
   if (!document.getElementById('dark-mode-styles')) {
@@ -46,11 +80,40 @@ function injectDarkMode() {
   }
 }
 
+function updateThemeIcons() {
+  const isDark = document.documentElement.classList.contains('dark-mode');
+  const iconSize = "14";
+
+  // Helper to create SVG
+  const createSVG = (content, isMenu = false) => {
+    const style = isMenu ? 'margin-right:8px; opacity:0.6;' : '';
+    return `<svg width="${iconSize}" height="${iconSize}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="${style}">${content}</svg>`;
+  };
+
+  // Update toggle button in user menu (if it exists)
+  const menuIconContainer = document.querySelector('#dark-mode-toggle svg');
+  if (menuIconContainer) {
+    menuIconContainer.outerHTML = createSVG(isDark ? moonIconContent : sunIconContent, true);
+  }
+  const menuText = document.getElementById('theme-toggle-text');
+  if (menuText) {
+    menuText.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  }
+
+  // Update floating button (login/register pages)
+  const floatingBtn = document.getElementById('theme-toggle-btn');
+  if (floatingBtn) {
+    floatingBtn.innerHTML = createSVG(isDark ? moonIconContent : sunIconContent, false);
+    if (!floatingBtn.onclick) {
+      floatingBtn.onclick = function () { toggleDarkMode(); };
+    }
+  }
+}
+
 function toggleDarkMode() {
   const isDark = document.documentElement.classList.toggle('dark-mode');
   localStorage.setItem('darkMode', isDark);
-  const toggleText = document.getElementById('theme-toggle-text');
-  if (toggleText) toggleText.textContent = isDark ? 'Light Mode' : 'Dark Mode';
+  updateThemeIcons();
 }
 
 (function () {
@@ -106,6 +169,7 @@ function getSidebarContent() {
 }
 
 function renderSidebar() {
+  const isAuthPage = window.location.pathname.includes('login') || window.location.pathname.includes('register');
   const sidebarContainer = document.getElementById("sidebar-menu-content");
   if (sidebarContainer) {
     sidebarContainer.innerHTML = getSidebarContent();
@@ -159,36 +223,40 @@ function getUserMenuContent() {
 }
 
 function renderUserMenu() {
+  const isAuthPage = window.location.pathname.includes('login') || window.location.pathname.includes('register');
   let menuContainer = document.getElementById("user-menu-container");
-  if (!menuContainer) {
+
+  if (!menuContainer && !isAuthPage) {
     menuContainer = document.createElement('div');
     menuContainer.id = "user-menu-container";
     document.body.appendChild(menuContainer);
   }
-  menuContainer.innerHTML = getUserMenuContent();
 
-  const avatarBtn = document.getElementById("user-avatar-btn");
-  const dropdown = document.getElementById("user-dropdown");
-  const darkToggle = document.getElementById("dark-mode-toggle");
+  if (menuContainer) {
+    menuContainer.innerHTML = getUserMenuContent();
+    const avatarBtn = document.getElementById("user-avatar-btn");
+    const dropdown = document.getElementById("user-dropdown");
+    const darkToggle = document.getElementById("dark-mode-toggle");
 
-  if (avatarBtn && dropdown) {
-    avatarBtn.onclick = function (e) {
-      e.stopPropagation();
-      dropdown.classList.toggle("is-active");
-    };
+    if (avatarBtn && dropdown) {
+      avatarBtn.onclick = function (e) {
+        e.stopPropagation();
+        dropdown.classList.toggle("is-active");
+      };
 
-    document.addEventListener("click", function () {
-      dropdown.classList.remove("is-active");
-    });
+      document.addEventListener("click", function () {
+        dropdown.classList.remove("is-active");
+      });
 
-    dropdown.onclick = function (e) { e.stopPropagation(); };
-  }
+      dropdown.onclick = function (e) { e.stopPropagation(); };
+    }
 
-  if (darkToggle) {
-    darkToggle.onclick = function (e) {
-      e.preventDefault();
-      toggleDarkMode();
-    };
+    if (darkToggle) {
+      darkToggle.onclick = function (e) {
+        e.preventDefault();
+        toggleDarkMode();
+      };
+    }
   }
 }
 
@@ -196,5 +264,6 @@ document.addEventListener("DOMContentLoaded", function () {
   injectDarkMode();
   renderSidebar();
   renderUserMenu();
+  updateThemeIcons();
   highlightCurrentMenuItem();
 });
