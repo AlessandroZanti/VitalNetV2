@@ -446,8 +446,35 @@
                 alert("Passwords do not match");
                 return;
             }
-            alert("Registration complete (Simulation)");
-            window.location.href = '/login.html';
+
+            const data = {
+                license: document.getElementById('license').value,
+                name: document.getElementById('name').value + ' ' + document.getElementById('surnames').value,
+                email: document.getElementById('email').value,
+                password: pw
+            };
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => {
+                    if (response.status === 201) {
+                        alert("Registration successful! You can now log in.");
+                        window.location.href = '/login.html';
+                    } else if (response.status === 409) {
+                        alert("Error: User already exists with this email.");
+                    } else {
+                        response.text().then(text => alert("Error: " + text));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An error occurred. Please try again.");
+                });
         });
     </script>
     <div id="theme-toggle-btn"

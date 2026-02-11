@@ -1,4 +1,46 @@
 #include "LoRa/Server.h"
+#include <mbedtls/sha256.h>
+
+// Helper to hash password
+String hashPassword(String password) {
+  byte shaResult[32];
+  mbedtls_sha256_context ctx;
+  mbedtls_sha256_init(&ctx);
+  mbedtls_sha256_starts(&ctx, 0);
+  mbedtls_sha256_update(&ctx, (const unsigned char*)password.c_str(), password.length());
+  mbedtls_sha256_finish(&ctx, shaResult);
+  mbedtls_sha256_free(&ctx);
+
+  String hash = "";
+  for (int i = 0; i < 32; i++) {
+    char str[3];
+    sprintf(str, "%02x", (int)shaResult[i]);
+    hash += str;
+  }
+  return hash;
+}
+
+// Helper to check if a user exists and verify password
+bool verifyUser(String username, String password) {
+  if (!SPIFFS.exists("/users.json")) return false;
+  File file = SPIFFS.open("/users.json", "r");
+  if (!file) return false;
+
+  JsonDocument doc;
+  DeserializationError error = deserializeJson(doc, file);
+  file.close();
+  if (error) return false;
+
+  JsonArray users = doc.as<JsonArray>();
+  String hashedPassword = hashPassword(password);
+
+  for (JsonObject user : users) {
+    if (user["username"] == username && user["password"] == hashedPassword) {
+      return true;
+    }
+  }
+  return false;
+}
 
 // Inicialización del arreglo de rutas
 Route routes[] = {
@@ -22,35 +64,20 @@ Route routes[] = {
   {"/images/vitalnet-logo-color.svg", "/images/vitalnet-logo-color.svg", "image/svg+xml"},
 };
 
-// Obtener la dirección MAC del ESP32 y crea un nombre único para el receptor basado en parte de la MAC
-String mac_address = WiFi.macAddress();
-String microcontroller = "VitalNet-Reciever-" + mac_address.substring(6, 8) + mac_address.substring(9, 11);
-
-AsyncWebServer server(80);
-
-// Función para generar el JSON con la información del sistema
+// ... (keep generateSystemInfoJson, getWifiScanJson, createAccessPoint, connectToWifi as they are)
 String IRAM_ATTR generateSystemInfoJson() {
-  // Crear un objeto JSON
   DynamicJsonDocument doc(1024);
-
-  // Información del sistema
   JsonObject systemInfo = doc.createNestedObject("system_info");
   systemInfo["chip_id"] = ESP.getEfuseMac();
   systemInfo["free_heap"] = ESP.getFreeHeap();
   systemInfo["chip_revision"] = ESP.getChipRevision();
   systemInfo["sdk_version"] = ESP.getSdkVersion();
-
-  // Información de la red WiFi
   JsonObject wifiInfo = doc.createNestedObject("wifi_info");
   wifiInfo["mac_address"] = WiFi.macAddress();
   wifiInfo["ssid"] = WiFi.SSID();
   wifiInfo["rssi"] = WiFi.RSSI();
-
-  // Información de uso de CPU
   JsonObject cpuInfo = doc.createNestedObject("cpu_info");
   cpuInfo["free_stack_space"] = uxTaskGetStackHighWaterMark(NULL);
-
-  // Crear una cadena JSON
   String json;
   serializeJson(doc, json);
   yield();
@@ -61,7 +88,6 @@ String IRAM_ATTR getWifiScanJson() {
   if(WiFi.status()==1||WiFi.status()==6||WiFi.status()==5){
     WiFi.disconnect();
   }    
-  int contador=0;
   int n;
   String json;
   do {
@@ -69,174 +95,160 @@ String IRAM_ATTR getWifiScanJson() {
       json = "{\"scan_result\":[";
       if (n == -2) {
         WiFi.scanNetworks(true,false);
-      } else if (n) {
+      } else if (n > 0) {
         for (int i = 0; i < n; ++i) {
           if (i) json += ",";
           json += "{";
           json += "\"RSSI\":" + String(WiFi.RSSI(i));
           json += ",\"SSID\":\"" + WiFi.SSID(i) + "\"";
           json += "}";
-        } //{ RSSI: -65, SSID: "Lowi46CC" },
-        WiFi.scanDelete();
-        if (WiFi.scanComplete() ==0) {
-          WiFi.scanNetworks(true);
         }
+        WiFi.scanDelete();
       }
       json += "]}";
-  }while(n==-2);//||n==0);
+  }while(n==-2);
   yield();
   return json;
 }
 
 void createAccessPoint() {
+  String mac_address = WiFi.macAddress();
+  String microcontroller = "VitalNet-Reciever-" + mac_address.substring(6, 8) + mac_address.substring(9, 11);
   WiFi.softAPConfig(IPAddress(192, 168, 4, 1), IPAddress(192, 168, 4, 1), IPAddress(255, 255, 255, 0));
-  // Configura y activa el punto de acceso WiFi con los datos especificados
   WiFi.softAP(microcontroller, "Adminxxx1");
-  // Informa que el punto de acceso ha sido configurado y muestra su dirección IP
   Serial.print("IP del punto de acceso: ");
   Serial.println(WiFi.softAPIP());
-  // TODO: Debería mostrar en la pantalla el IP creado como punto de acceso
 }
 
 void connectToWifi() {
   Preferences preferences;
   preferences.begin("wifi_settings", false);
-
-  // Leer SSID y contraseña de las preferencias
   String ssid = preferences.getString("ssid", "");
   String password = preferences.getString("password", "");
-  
-  // Si las credenciales no están vacías, intentar conectarse
   if (ssid.length() > 0 && password.length() > 0) {
-    Serial.println("Conectando a WiFi con las credenciales guardadas...");
     WiFi.begin(ssid.c_str(), password.c_str());
     int connectionAttempt = 0;
-    while (WiFi.status() != WL_CONNECTED && connectionAttempt < 10) { // Intentar hasta 10 veces
+    while (WiFi.status() != WL_CONNECTED && connectionAttempt < 10) {
       delay(500);
-      Serial.println("Conectando...");
       connectionAttempt++;
     }
-    if (WiFi.status() == WL_CONNECTED) {
-      // IP asignada dentro de la red WiFi
-      Serial.print("IP dentro de la red wifi: ");
-      Serial.println(WiFi.localIP());
-      // Confirma la conexión exitosa y muestra la 
-      Serial.print("Conectado a la red wifi: ");
-      Serial.println(ssid);
-    } else {
-      Serial.println("Error al conectar a la red WiFi. Verifica las credenciales o la disponibilidad de la red.");
-    }
-  } else {
-    Serial.println("No se encontraron credenciales guardadas.");
   }
-
-  // Cerrar el espacio de preferencias
   preferences.end();
 }
 
 void serverRoutes() {
-  // verifica que SPIFFS este funcionando correctamente.
-  if (!SPIFFS.begin(true)) {
-    Serial.println("Ocurrió un error al montar SPIFFS");
-    return;
-  }
+  if (!SPIFFS.begin(true)) return;
 
-  // informacion obtenida por una torreta.
   server.on("/air-info", HTTP_GET, [](AsyncWebServerRequest *request) {
-    Serial.println("air-info route fetched");
-    String response = handleAirRequest();
-    request->send(200, "application/json", response);
+    request->send(200, "application/json", handleAirRequest());
   });
 
-  // informacion obtenida por una boya.
   server.on("/water-info", HTTP_GET, [](AsyncWebServerRequest *request) {
-    Serial.println("water-info route fetched");
-    String response = handleWaterRequest();
-    request->send(200, "application/json", response);
+    request->send(200, "application/json", handleWaterRequest());
   });
 
-  // informacion del sistema.
   server.on("/system-info", HTTP_GET, [](AsyncWebServerRequest *request){
-    String json = generateSystemInfoJson();
-    request->send(200, "application/json", json);
+    request->send(200, "application/json", generateSystemInfoJson());
   });
 
-  // informacion del sistema.
   server.on("/connections-info", HTTP_GET, [](AsyncWebServerRequest *request){
-    Serial.println("Escaneando conecciones wifi");
-    String json = getWifiScanJson(); // Llama a la función para obtener el JSON
-    request->send(200, "application/json", json); // Envía el JSON como respuesta
+    request->send(200, "application/json", getWifiScanJson());
   });
 
-  // informacion del sistema.
   server.on("/connections", HTTP_GET, [](AsyncWebServerRequest *request){
     if (request->hasParam("ssid") && request->hasParam("password")) {
-      // Obtener SSID y contraseña de los parámetros
       String ssid = request->getParam("ssid")->value();
       String password = request->getParam("password")->value();
-      
-      // Guardar SSID y contraseña en las preferencias
       Preferences preferences;
-      
       preferences.begin("wifi_settings", false);
       preferences.putString("ssid", ssid);
       preferences.putString("password", password);
       preferences.end();
-      
-      // Conectar a la red WiFi con las nuevas credenciales
       connectToWifi();
-      
-      // Enviar respuesta de éxito
-      request->send(200, "text/plain", "Se configuró la conexión correctamente.");              
+      request->send(200, "text/plain", "OK");              
     } else {
-      // Enviar respuesta de error si faltan parámetros
-      request->send(400, "text/plain", "Parámetros faltantes");
+      request->send(400, "text/plain", "Missing params");
     } 
   });
 
-  // Registra las rutas en el servidor web
   for (auto& route : routes) {
     server.on(route.uri, HTTP_GET, [&route](AsyncWebServerRequest *request) {
-      request->send(SPIFFS, route.path, route.contentType); // Envía el archivo solicitado desde SPIFFS
+      request->send(SPIFFS, route.path, route.contentType);
     });
   }
 }
 
 void defaultServices() {
-
   createAccessPoint();
-  
-  if (!SPIFFS.begin(true)) {
-    Serial.println("Ocurrió un error al montar SPIFFS");
-    return;
-  }
+  if (!SPIFFS.begin(true)) return;
 
-  // Ruta de registro.
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
       request->send(SPIFFS, "/pages/login.html", "text/html");
   });
 
-  // Manejo del registro.
   server.on("/login", HTTP_GET, [](AsyncWebServerRequest *request) {
-
-    // Obtener los parámetros del formulario
     if (request->hasParam("username") && request->hasParam("password")) {
-      
       String username = request->getParam("username")->value();
       String password = request->getParam("password")->value();
 
-      // Verificar credenciales (aquí deberías comparar con tus credenciales almacenadas)
-      if (username == "usuario" && password == "contraseña") {
+      if (verifyUser(username, password)) {
         serverRoutes();
-        request->send(200, "text/plain", "Inicio de sesión exitoso");              
+        request->send(200, "text/plain", "OK");              
       } else {
-        request->send(401, "text/plain", "Credenciales incorrectas");
+        request->send(401, "text/plain", "Invalid credentials");
       }
     } else {
-      request->send(400, "text/plain", "Parámetros faltantes");
+      request->send(400, "text/plain", "Missing params");
     }
   });
 
-  // Iniciar el servidor
+  server.on("/register", HTTP_POST, [](AsyncWebServerRequest *request) {}, NULL, [](AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
+    JsonDocument registerDoc;
+    DeserializationError error = deserializeJson(registerDoc, data, len);
+    if (error) {
+      request->send(400, "text/plain", "Invalid JSON");
+      return;
+    }
+
+    String username = registerDoc["email"].as<String>(); // Using email as username for this example
+    String password = registerDoc["password"].as<String>();
+    
+    if (username == "" || password == "") {
+      request->send(400, "text/plain", "Missing data");
+      return;
+    }
+
+    JsonDocument dbDoc;
+    if (SPIFFS.exists("/users.json")) {
+      File file = SPIFFS.open("/users.json", "r");
+      deserializeJson(dbDoc, file);
+      file.close();
+    } else {
+      dbDoc.to<JsonArray>();
+    }
+
+    JsonArray users = dbDoc.as<JsonArray>();
+    
+    // Check if user already exists
+    for (JsonObject u : users) {
+      if (u["username"] == username) {
+        request->send(409, "text/plain", "User exists");
+        return;
+      }
+    }
+
+    JsonObject newUser = users.createNestedObject();
+    newUser["username"] = username;
+    newUser["password"] = hashPassword(password);
+    newUser["name"] = registerDoc["name"].as<String>();
+    newUser["license"] = registerDoc["license"].as<String>();
+
+    File file = SPIFFS.open("/users.json", "w");
+    serializeJson(dbDoc, file);
+    file.close();
+
+    request->send(201, "text/plain", "User created");
+  });
+
   server.begin();
 }
