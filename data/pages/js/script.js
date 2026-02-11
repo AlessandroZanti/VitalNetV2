@@ -168,8 +168,18 @@ function getSidebarContent() {
   `;
 }
 
+function isAuthPage() {
+  const path = window.location.pathname.toLowerCase();
+  return path.includes('login') ||
+    path.includes('register') ||
+    path === '/' ||
+    path === '' ||
+    document.getElementById('loginForm') !== null ||
+    document.getElementById('registerForm') !== null;
+}
+
 function renderSidebar() {
-  const isAuthPage = window.location.pathname.includes('login') || window.location.pathname.includes('register');
+  if (isAuthPage()) return;
   const sidebarContainer = document.getElementById("sidebar-menu-content");
   if (sidebarContainer) {
     sidebarContainer.innerHTML = getSidebarContent();
@@ -177,6 +187,7 @@ function renderSidebar() {
 }
 
 function highlightCurrentMenuItem() {
+  if (isAuthPage()) return;
   const currentPath = decodeURIComponent(window.location.pathname);
   const menuItems = document.querySelectorAll(
     ".information-sidebar .menu-item a"
@@ -223,10 +234,10 @@ function getUserMenuContent() {
 }
 
 function renderUserMenu() {
-  const isAuthPage = window.location.pathname.includes('login') || window.location.pathname.includes('register');
+  if (isAuthPage()) return;
   let menuContainer = document.getElementById("user-menu-container");
 
-  if (!menuContainer && !isAuthPage) {
+  if (!menuContainer) {
     menuContainer = document.createElement('div');
     menuContainer.id = "user-menu-container";
     document.body.appendChild(menuContainer);
