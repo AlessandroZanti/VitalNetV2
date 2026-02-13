@@ -137,6 +137,7 @@ function toggleDarkMode() {
 })();
 
 function getSidebarContent() {
+  const isInicio = window.location.pathname.includes('inicio');
   return `
     <ul>
       <li class="menu-item">
@@ -161,9 +162,10 @@ function getSidebarContent() {
           </li>
         </ul>
       </li>
+      ${!isInicio ? `
       <li class="menu-item">
         <a href="./configuracion">Settings</a>
-      </li>
+      </li>` : ''}
     </ul>
   `;
 }
@@ -205,6 +207,7 @@ function highlightCurrentMenuItem() {
 
 function getUserMenuContent() {
   const isDark = localStorage.getItem('darkMode') === 'true';
+  const isInicio = window.location.pathname.includes('inicio');
   return `
     <div class="user-menu-wrapper">
       <button class="user-avatar-btn" id="user-avatar-btn">
@@ -219,7 +222,7 @@ function getUserMenuContent() {
         <ul class="user-dropdown-list">
           <li><a href="#"><img src="/images/users.svg" style="height:14px; margin-right:8px; opacity:0.6;"> Account</a></li>
           <li><a href="#"><img src="/images/VitalNet-Logo.svg" style="height:14px; margin-right:8px; opacity:0.6;"> About Us</a></li>
-          <li><a href="./configuracion"><img src="/images/config.svg" style="height:14px; margin-right:8px; opacity:0.6;"> Settings</a></li>
+          ${!isInicio ? `<li><a href="./configuracion"><img src="/images/config.svg" style="height:14px; margin-right:8px; opacity:0.6;"> Settings</a></li>` : ''}
           <li><a href="javascript:void(0)" id="dark-mode-toggle">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px; opacity:0.6;">
               <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>

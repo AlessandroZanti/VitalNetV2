@@ -1,4 +1,14 @@
-.pio/
-.vscode/
-*.log
+# Environment variables
 .env
+
+# Database
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS Files
+.DS_Store
+Thumbs.db

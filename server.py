@@ -8,11 +8,31 @@ import urllib.parse
 import urllib.request
 from urllib.parse import urlparse, parse_qs
 
-PORT = 8082
-DB_FILE = "/usr/local/VitalNet/vitalnet.db"
+# Simple .env loader
+def load_env():
+    env_path = os.path.join(os.path.dirname(__file__), '.env')
+    if os.path.exists(env_path):
+        with open(env_path) as f:
+            for line in f:
+                if line.strip() and not line.startswith('#'):
+                    key, value = line.strip().split('=', 1)
+                    os.environ[key] = value
 
-# reCAPTCHA Keys
-RECAPTCHA_SECRET_KEY = "6LdtIWosAAAAAI57haSL3IZQn0iQWrXBQGi0evBM"
+load_env()
+
+PORT = int(os.environ.get("VITALNET_PORT", 8082))
+DB_FILE = os.environ.get("VITALNET_DB", "/usr/local/VitalNet/vitalnet.db")
+
+# reCAPTCHA Secret Key (Load from environment variable for security)
+RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY")
+
+# Security: Pepper/Salt for password hashing
+# In a real app, use a library like bcrypt or argon2. 
+# This is a baseline improvement to prevent rainbow table attacks.
+PASSWORD_SALT = os.environ.get("VITALNET_SALT", "default_secret_salt_change_me")
+
+if not RECAPTCHA_SECRET_KEY:
+    print("WARNING: RECAPTCHA_SECRET_KEY environment variable not set.")
 
 def init_db():
     print(f"Initializing database at {DB_FILE}...")
@@ -25,7 +45,9 @@ def init_db():
     print("Database initialized successfully.")
 
 def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+    # Combine password with a secret salt/pepper before hashing
+    salted = password + PASSWORD_SALT
+    return hashlib.sha256(salted.encode()).hexdigest()
 
 class VitalNetHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):

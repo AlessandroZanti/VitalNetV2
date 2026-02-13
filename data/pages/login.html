@@ -178,6 +178,73 @@
     .information-sidebar__toggle {
       display: none !important;
     }
+
+    /* Transition Overlay Styles */
+    #transition-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff;
+      /* Default Light Background */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+    }
+
+    .dark-mode #transition-overlay {
+      background-color: #000000;
+      /* Dark Mode Background */
+    }
+
+    #transition-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #transition-logo {
+      width: 280px;
+      /* Significantly larger logo */
+      height: auto;
+      transform: scale(0.8) translateY(20px);
+      transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 0 30px rgba(0, 0, 0, 0.05));
+    }
+
+    .dark-mode #transition-logo {
+      filter: invert(1) brightness(2) drop-shadow(0 0 40px rgba(255, 255, 255, 0.2));
+    }
+
+    #transition-overlay.active #transition-logo {
+      transform: scale(1.0) translateY(0);
+    }
+
+    .loading-text {
+      color: #000000;
+      margin-top: 30px;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease 0.3s;
+    }
+
+    .dark-mode .loading-text {
+      color: #ffffff;
+    }
+
+    #transition-overlay.active .loading-text {
+      opacity: 0.6;
+      transform: translateY(0);
+    }
   </style>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
@@ -520,7 +587,13 @@
         })
           .then((response) => {
             if (response.status === 200) {
-              window.location.href = "/inicio";
+              // Trigger Cool Transition
+              const overlay = document.getElementById('transition-overlay');
+              overlay.classList.add('active');
+
+              setTimeout(() => {
+                window.location.href = "/inicio";
+              }, 1200); // Give time for the animation to look good
             } else {
               // Si la respuesta no es exitosa, muestra un mensaje de alerta con el contenido de la respuesta recibida del servidor
               response.text().then((data) => {
@@ -541,6 +614,11 @@
       stroke-linecap="round" stroke-linejoin="round">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
     </svg>
+  </div>
+
+  <div id="transition-overlay">
+    <img id="transition-logo" src="/images/VitalNet-Logo.svg" alt="VitalNet Logo" />
+    <div class="loading-text">Accessing VitalNet...</div>
   </div>
 
   <script src="./js/script.js"></script>
