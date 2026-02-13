@@ -196,6 +196,7 @@
             display: none !important;
         }
     </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 
 <body>
@@ -357,6 +358,10 @@
                 </div>
             </div>
 
+            <div id="captcha-container" style="margin-top: 25px; display: flex; justify-content: center;">
+                <div class="g-recaptcha" data-sitekey="6LdtIWosAAAAAI5k6BjDPP8e3W8kzd1r9aBfj0QI"></div>
+            </div>
+
             <div class="button-group">
                 <button type="button" class="btn btn-cancel"
                     onclick="window.location.href='/login.html'">Cancel</button>
@@ -440,6 +445,13 @@
 
         document.getElementById('registerForm').addEventListener('submit', function (e) {
             e.preventDefault();
+
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (!recaptchaResponse) {
+                alert("Please complete the reCAPTCHA");
+                return;
+            }
+
             const pw = document.getElementById('password').value;
             const cpw = document.getElementById('confirm-password').value;
             if (pw !== cpw) {
@@ -451,7 +463,8 @@
                 license: document.getElementById('license').value,
                 name: document.getElementById('name').value + ' ' + document.getElementById('surnames').value,
                 email: document.getElementById('email').value,
-                password: pw
+                password: pw,
+                'g-recaptcha-response': recaptchaResponse
             };
 
             fetch('/register', {
@@ -467,13 +480,18 @@
                         window.location.href = '/login.html';
                     } else if (response.status === 409) {
                         alert("Error: User already exists with this email.");
+                        grecaptcha.reset();
                     } else {
-                        response.text().then(text => alert("Error: " + text));
+                        response.text().then(text => {
+                            alert("Error: " + text);
+                            grecaptcha.reset();
+                        });
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                     alert("An error occurred. Please try again.");
+                    grecaptcha.reset();
                 });
         });
     </script>
